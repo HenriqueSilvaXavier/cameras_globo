@@ -106,9 +106,7 @@
   <main class="content">
     <div class="main-camera">
       <h2 id="titulo">Câmera Principal</h2>
-      <video id="videoPrincipal" controls autoplay muted>
-        <source id="fontePrincipal" src="rtsp://Porto:Porto@9000@168.90.225.117:554/cam/realmonitor?channel=4&amp;subtype=0" type="application/x-rtsp">
-        
+        <iframe id="cameraEmbed" width="100%" height="100%" src="https://rtsp.me/embed/EE9YQ2kr/" frameborder="0" title="RTSP Stream Player" allowfullscreen style="border-radius: 8px; background: black;" allow="autoplay"></iframe>
       </video>
     </div>
 
@@ -126,15 +124,15 @@
     let player;
 
     const cameras = [
-      { nome: "BOA VIAGEM", url: "rtsp://Porto:Porto@9000@168.90.225.117:554/cam/realmonitor?channel=1&amp;subtype=0", nomes_alternativos: ["Boa Viagem"] },
-      { nome: "GUARARAPES", url: "rtsp://Porto:Porto@9000@168.90.225.117:554/cam/realmonitor?channel=2&amp;subtype=0", nomes_alternativos: ["Guararapes"] },
-      { nome: "RUA DA AURORA", url: "rtsp://Porto:Porto@9000@168.90.225.117:554/cam/realmonitor?channel=3&amp;subtype=0", nomes_alternativos: ["Rua da Aurora"] },
-      { nome: "DERBY", url: "rtsp://Porto:Porto@9000@168.90.225.117:554/cam/realmonitor?channel=4&amp;subtype=0", nomes_alternativos: ["Derby"] },
-      { nome: "AV. CONDE DA BOA VISTA", url: "rtsp://Porto:Porto@9000@168.90.225.117:554/cam/realmonitor?channel=5&amp;subtype=0", nomes_alternativos: ["Conde da Boa Vista", "Avenida Conde da Boa Vista"] },
-      { nome: "BR-101", url: "rtsp://Porto:Porto@9000@168.90.225.117:554/cam/realmonitor?channel=6&amp;subtype=0", nomes_alternativos: ["BR-101", "BR 101", "BR101"] },
-      { nome: "PE-15", url: "rtsp://Porto:Porto@9000@168.90.225.117:554/cam/realmonitor?channel=7&amp;subtype=0", nomes_alternativos: ["PE-15", "PE 15", "PE15"] },
-      { nome: "TORRE AURORA", url: "rtsp://Porto:Porto@9000@168.90.225.117:554/cam/realmonitor?channel=8&amp;subtype=0", nomes_alternativos: ["Torre Aurora"] },
-      { nome: "CARUARU", url: "rtsp://Porto:Porto@9000@168.90.225.117:554/cam/realmonitor?channel=9&amp;subtype=0", nomes_alternativos: ["Caruaru"] },
+      { nome: "BOA VIAGEM", url: "https://rtsp.me/embed/EE9YQ2kr/", nomes_alternativos: ["Boa Viagem"] },
+      { nome: "GUARARAPES", url: "https://rtsp.me/embed/iRdBZ5Fb/", nomes_alternativos: ["Guararapes"] },
+      { nome: "RUA DA AURORA", url: "https://rtsp.me/embed/d6GdH3As/", nomes_alternativos: ["Rua da Aurora"] },
+      { nome: "DERBY", url: "https://rtsp.me/embed/3dN54tn9/", nomes_alternativos: ["Derby"] },
+      { nome: "AV. CONDE DA BOA VISTA", url: "https://rtsp.me/embed/29kehdKA/", nomes_alternativos: ["Conde da Boa Vista", "Avenida Conde da Boa Vista"] },
+      { nome: "BR-101", url: "https://rtsp.me/embed/4ZAKktsD/", nomes_alternativos: ["BR-101", "BR 101", "BR101"] },
+      { nome: "PE-15", url: "https://rtsp.me/embed/b77G8Ny2/", nomes_alternativos: ["PE-15", "PE 15", "PE15"] },
+      { nome: "TORRE AURORA", url: "https://rtsp.me/embed/dhkDSZYe/", nomes_alternativos: ["Torre Aurora"] },
+      { nome: "CARUARU", url: "https://rtsp.me/embed/39B2Nz33/", nomes_alternativos: ["Caruaru"] },
     ];
 
     function iniciarCapturaDeVoz() {
@@ -178,26 +176,30 @@
         }
       }
     }
+  function mudarCamera(nomeCamera) {
+  if (recognition && recognition.stop) {
+    recognition.stop();
+  }
 
-    function mudarCamera(nomeCamera) {
-      // Parar a captura de voz antes de mudar a câmera
-      if (recognition && recognition.stop) {
-        recognition.stop();
-      }
+  const camera = cameras.find(cam => cam.nome.toLowerCase() === nomeCamera.toLowerCase());
 
-      const camera = cameras.find(cam => cam.nome.toLowerCase() === nomeCamera.toLowerCase());
-      
-      if (camera) {
-        document.getElementById("fontePrincipal").src = camera.url;
-        document.getElementById("titulo").textContent = `Câmera Principal: ${camera.nome}`;
-        document.getElementById("videoPrincipal").load();
-      } else {
-        console.log("Câmera não encontrada");
-      }
+  if (camera) {
+    const titulo = document.getElementById("titulo");
+    titulo.textContent = `Câmera Principal: ${camera.nome}`;
 
-      // Reiniciar a captura de voz após mudar a câmera
-      iniciarCapturaDeVoz();
+    const iframe = document.getElementById("cameraEmbed");
+    if (iframe) {
+      iframe.src = camera.url;
+    } else {
+      console.warn("Iframe principal não encontrado.");
     }
+  } else {
+    console.log("Câmera não encontrada");
+  }
+
+  iniciarCapturaDeVoz();
+}
+
 
     function renderizarListaCameras() {
       const lista = document.getElementById("listaCameras");
