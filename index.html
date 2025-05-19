@@ -7,95 +7,141 @@
   <title>Monitoramento de Trânsito</title>
 
   <style>
-    * {
-      box-sizing: border-box;
+  * {
+    box-sizing: border-box;
+  }
+
+  body {
+    margin: 0;
+    font-family: Arial, sans-serif;
+    background-color: #f4f4f4;
+  }
+
+  .top-bar {
+    display: flex;
+    align-items: center;
+    background-color: #1e1e2f;
+    color: white;
+    padding: 10px 20px;
+    flex-wrap: wrap;
+  }
+
+  .logo {
+    height: 50px;
+    margin-right: 20px;
+  }
+
+  h1 {
+    font-size: 24px;
+    margin: 0;
+  }
+
+  .content {
+    display: flex;
+    flex-direction: row;
+    height: calc(100vh - 80px);
+  }
+
+  .main-camera {
+    flex: 3;
+    padding: 20px;
+  }
+
+  .main-camera h2 {
+    margin-bottom: 10px;
+  }
+
+  .main-camera video,
+  .main-camera iframe {
+    width: 100%;
+    height: 80vh;
+    background: black;
+    border-radius: 8px;
+  }
+
+  .side-cameras {
+    flex: 1;
+    background-color: #eee;
+    padding: 20px;
+    overflow-y: auto;
+  }
+
+  .side-cameras h3 {
+    margin-bottom: 15px;
+  }
+
+  .side-cameras ul {
+    list-style: none;
+    padding: 0;
+    margin: 0;
+  }
+
+  #listaCameras>div {
+    margin-bottom: 15px;
+    padding: 10px;
+    border: 1px solid #ccc;
+    border-radius: 8px;
+    background-color: #fff;
+    cursor: pointer;
+    transition: transform 0.2s ease, box-shadow 0.2s ease;
+  }
+
+  #listaCameras>div:hover {
+    transform: scale(1.05);
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+  }
+
+  .side-cameras video,
+  .side-cameras img {
+    width: 100%;
+    border-radius: 5px;
+  }
+
+  .side-cameras p {
+    text-align: center;
+    margin-top: 5px;
+    font-weight: bold;
+  }
+
+  /* ----------- Responsividade ----------- */
+  @media (max-width: 768px) {
+    .content {
+      flex-direction: column;
+      height: auto;
     }
 
-    body {
-      margin: 0;
-      font-family: Arial, sans-serif;
-      background-color: #f4f4f4;
+    .main-camera,
+    .side-cameras {
+      flex: unset;
+      width: 100%;
+      padding: 10px;
+    }
+
+    .main-camera video,
+    .main-camera iframe {
+      height: auto;
+      aspect-ratio: 16 / 9;
     }
 
     .top-bar {
-      display: flex;
-      align-items: center;
-      background-color: #1e1e2f;
-      color: white;
-      padding: 10px 20px;
+      flex-direction: column;
+      text-align: center;
     }
 
     .logo {
-      height: 50px;
-      margin-right: 20px;
-    }
-
-    h1 {
-      font-size: 24px;
-      margin: 0;
-    }
-
-    .content {
-      display: flex;
-      flex-direction: row;
-      height: calc(100vh - 80px);
-    }
-
-    .main-camera {
-      flex: 3;
-      padding: 20px;
-    }
-
-    .main-camera h2 {
+      margin-right: 0;
       margin-bottom: 10px;
     }
 
-    .main-camera video {
-      width: 100%;
-      height: 80vh;
-      background: black;
-      border-radius: 8px;
+    h1 {
+      font-size: 20px;
     }
+    .imgListaCameras {
+      display:none;
+    }
+  }
+</style>
 
-    .side-cameras {
-      flex: 1;
-      background-color: #eee;
-      padding: 20px;
-      overflow-y: auto;
-    }
-
-    .side-cameras h3 {
-      margin-bottom: 15px;
-    }
-
-    .side-cameras ul {
-      list-style: none;
-      padding: 0;
-      margin: 0;
-    }
-
-    .side-cameras li {
-      margin-bottom: 15px;
-      cursor: pointer;
-      transition: transform 0.2s ease;
-    }
-
-    .side-cameras li:hover {
-      transform: scale(1.05);
-    }
-
-    .side-cameras video,
-    .side-cameras img {
-      width: 100%;
-      border-radius: 5px;
-    }
-
-    .side-cameras p {
-      text-align: center;
-      margin-top: 5px;
-      font-weight: bold;
-    }
-  </style>
 </head>
 <body>
   <header class="top-bar">
@@ -177,10 +223,6 @@
       }
     }
   function mudarCamera(nomeCamera) {
-  if (recognition && recognition.stop) {
-    recognition.stop();
-  }
-
   const camera = cameras.find(cam => cam.nome.toLowerCase() === nomeCamera.toLowerCase());
 
   if (camera) {
@@ -196,8 +238,6 @@
   } else {
     console.log("Câmera não encontrada");
   }
-
-  iniciarCapturaDeVoz();
 }
 
 
@@ -209,7 +249,7 @@
         item.innerHTML = ` 
           <div>
             <p>${camera.nome}</p>
-            <img src="logo_globo.png" alt="Miniatura da câmera ${camera.nome}" onerror="this.src='logo_globo.png'">
+            <img src="logo_globo.png" class="imgListaCameras" alt="Miniatura da câmera ${camera.nome}" onerror="this.src='logo_globo.png'">
           </div>
         `;
         lista.appendChild(item);
